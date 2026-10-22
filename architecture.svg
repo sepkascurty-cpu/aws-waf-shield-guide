@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="600" viewBox="0 0 920 600" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#4a5568"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#c53030"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="920" height="600" fill="#ffffff"/>
+  <text x="460" y="36" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a202c">AWS WAF &amp; Shield — Edge Security Architecture</text>
+
+  <!-- Internet actors -->
+  <g>
+    <rect x="30" y="90" width="130" height="90" rx="10" fill="#ebf4ff" stroke="#3182ce" stroke-width="2"/>
+    <text x="95" y="120" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a202c">👥 Users</text>
+    <text x="95" y="142" text-anchor="middle" font-size="12" fill="#4a5568">legit traffic</text>
+    <text x="95" y="160" text-anchor="middle" font-size="12" fill="#4a5568">browsers, apps</text>
+  </g>
+  <g>
+    <rect x="30" y="210" width="130" height="90" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+    <text x="95" y="240" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a202c">🦹 Attacker</text>
+    <text x="95" y="262" text-anchor="middle" font-size="12" fill="#4a5568">SQLi, XSS, bots</text>
+    <text x="95" y="280" text-anchor="middle" font-size="12" fill="#4a5568">DDoS floods</text>
+  </g>
+
+  <!-- CloudFront + WAF -->
+  <g>
+    <rect x="230" y="90" width="300" height="210" rx="10" fill="#fffaf0" stroke="#dd6b20" stroke-width="2"/>
+    <text x="380" y="118" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a202c">☁️ CloudFront</text>
+    <text x="380" y="138" text-anchor="middle" font-size="12" fill="#4a5568">global edge locations</text>
+    <rect x="250" y="150" width="260" height="60" rx="8" fill="#fff" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="380" y="172" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">WAF Web ACL</text>
+    <text x="380" y="191" text-anchor="middle" font-size="11" fill="#4a5568">managed rules · rate limit · CAPTCHA</text>
+    <rect x="250" y="222" width="260" height="56" rx="8" fill="#fff" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="380" y="243" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">Shield Advanced</text>
+    <text x="380" y="262" text-anchor="middle" font-size="11" fill="#4a5568">DDoS absorption · DRT on call</text>
+  </g>
+
+  <!-- blocked -->
+  <line x1="95" y1="255" x2="230" y2="230" stroke="#c53030" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-red)"/>
+  <text x="150" y="225" font-size="11" fill="#c53030" font-weight="bold">blocked ⛔</text>
+
+  <!-- users -> cloudfront -->
+  <line x1="160" y1="135" x2="230" y2="135" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ALB -->
+  <g>
+    <rect x="590" y="130" width="250" height="130" rx="10" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+    <text x="715" y="158" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a202c">⚖️ ALB</text>
+    <text x="715" y="178" text-anchor="middle" font-size="12" fill="#4a5568">regional scope</text>
+    <rect x="610" y="190" width="210" height="52" rx="8" fill="#fff" stroke="#38a169" stroke-width="1.5"/>
+    <text x="715" y="211" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">WAF Web ACL</text>
+    <text x="715" y="229" text-anchor="middle" font-size="11" fill="#4a5568">defense in depth</text>
+  </g>
+  <line x1="530" y1="195" x2="590" y2="195" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="560" y="185" text-anchor="middle" font-size="11" fill="#4a5568">legit only</text>
+
+  <!-- Origin -->
+  <g>
+    <rect x="590" y="300" width="250" height="120" rx="10" fill="#faf5ff" stroke="#805ad5" stroke-width="2"/>
+    <text x="715" y="328" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a202c">📦 Origin (ECS)</text>
+    <text x="715" y="348" text-anchor="middle" font-size="12" fill="#4a5568">private subnets</text>
+    <text x="715" y="366" text-anchor="middle" font-size="12" fill="#4a5568">SG: only 443 from ALB</text>
+    <text x="715" y="384" text-anchor="middle" font-size="12" fill="#4a5568">never exposed directly</text>
+  </g>
+  <line x1="715" y1="260" x2="715" y2="300" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Logging pipeline -->
+  <text x="30" y="470" font-size="14" font-weight="bold" fill="#1a202c">WAF logging pipeline</text>
+  <g>
+    <rect x="30" y="490" width="150" height="70" rx="8" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="105" y="518" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">WAF logs</text>
+    <text x="105" y="537" text-anchor="middle" font-size="11" fill="#4a5568">every decision</text>
+  </g>
+  <g>
+    <rect x="230" y="490" width="170" height="70" rx="8" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="315" y="518" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">Kinesis Firehose</text>
+    <text x="315" y="537" text-anchor="middle" font-size="11" fill="#4a5568">streaming delivery</text>
+  </g>
+  <g>
+    <rect x="450" y="490" width="150" height="70" rx="8" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="525" y="518" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">S3 bucket</text>
+    <text x="525" y="537" text-anchor="middle" font-size="11" fill="#4a5568">partitioned logs</text>
+  </g>
+  <g>
+    <rect x="650" y="490" width="150" height="70" rx="8" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="725" y="518" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a202c">Athena</text>
+    <text x="725" y="537" text-anchor="middle" font-size="11" fill="#4a5568">SQL on blocked reqs</text>
+  </g>
+  <line x1="180" y1="525" x2="230" y2="525" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="400" y1="525" x2="450" y2="525" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="600" y1="525" x2="650" y2="525" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="380" y1="300" x2="180" y2="490" stroke="#dd6b20" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+  <text x="240" y="420" font-size="11" fill="#dd6b20" font-weight="bold">log stream</text>
+
+  <!-- legend -->
+  <text x="30" y="350" font-size="12" font-weight="bold" fill="#1a202c">Flow</text>
+  <text x="30" y="372" font-size="12" fill="#4a5568">1. Request hits the edge → 2. WAF rules decide → 3. Shield absorbs floods</text>
+  <text x="30" y="392" font-size="12" fill="#4a5568">4. Legit traffic to ALB → 5. Origin in private subnets → 6. All logged to S3</text>
+</svg>
